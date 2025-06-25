@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oouversebot_v3</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-512.png">
+  <meta name="theme-color" content="#0f172a">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0f172a;
+      color: #e2e8f0;
+      padding: 1rem;
+    }
+    .signal-box {
+      background-color: #1e293b;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #334155;
+      margin-top: 1rem;
+    }
+    .label {
+      font-weight: bold;
+      color: #38bdf8;
+    }
+    .call { color: #22c55e; font-weight: bold; }
+    .put { color: #ef4444; font-weight: bold; }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .win-btn { background-color: #22c55e; color: white; }
+    .loss-btn { background-color: #ef4444; color: white; }
+  </style>
+</head>
+<body>
+  <h1>📈 oouversebot_v3</h1>
+  <div id="signal-box" class="signal-box">⏳ Loading first signal...</div>
+  <div style="margin-top:1rem;">
+    <button class="win-btn" onclick="submitFeedback(true)">✅ Win</button>
+    <button class="loss-btn" onclick="submitFeedback(false)">❌ Loss</button>
+  </div>
+  <script>
+    const box = document.getElementById("signal-box");
+    const audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+    const assets = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD"];
+    let asset = assets[Math.floor(Math.random() * assets.length)];
+    function generateSignal() {
+      asset = assets[Math.floor(Math.random() * assets.length)];
+      const call = Math.random() > 0.5;
+      const confidence = 93 + Math.floor(Math.random() * 5);
+      box.innerHTML = `
+        <h2>${asset} Signal</h2>
+        <iframe src="https://www.tradingview.com/widgetembed/?symbol=FX:${asset}&interval=1&theme=dark" 
+          width="100%" height="300" frameborder="0"></iframe>
+        <p><span class="label">Signal:</span> <span class="${call ? 'call' : 'put'}">${call ? 'CALL (Buy)' : 'PUT (Sell)'}</span></p>
+        <p><span class="label">Confidence:</span> ${confidence}%</p>
+        <p><span class="label">Chart:</span> 1-Minute</p>
+      `;
+      audio.play();
+    }
+    setInterval(generateSignal, 300000); // every 5 minutes
+    function submitFeedback(win) {
+      alert("Feedback noted: " + (win ? "Win ✅" : "Loss ❌"));
+    }
+    generateSignal();
+  </script>
+</body>
+</html>
